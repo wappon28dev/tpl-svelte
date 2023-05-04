@@ -1,55 +1,80 @@
 <!DOCTYPE html>
 <html lang="ja">
 
-<head>
-	<meta charset="utf-8" />
-	<meta name="description" content="" />
-	<link rel="icon" href="%sveltekit.assets%/favicon.png" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
+<head prefix="og: http://ogp.me/ns#">
+  <meta charset="utf-8" />
+  <link
+    rel="icon"
+    href="%sveltekit.assets%/favicon.png"
+  />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  />
 
-	<!-- Icons -->
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons%7CMaterial+Icons+Outlined" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+  <link
+    rel="dns-prefetch"
+    href="//fonts.googleapis.com"
+  >
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+  <link
+    rel="dns-prefetch"
+    href="//fonts.gstatic.com"
+    crossorigin
+  >
+  <link
+    href="https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@500;700;900&display=swap"
+    rel="stylesheet"
+  >
 
-	<!-- SMUI Styles -->
-	<link rel="stylesheet" id="smui" href="%sveltekit.assets%/styles/smui.css" media="(prefers-color-scheme: light)" />
-	<link rel="stylesheet" id="smui" href="%sveltekit.assets%/styles/smui-dark.css"
-		media="screen and (prefers-color-scheme: dark)" />
-	<link rel="stylesheet" id="color" href="%sveltekit.assets%/styles/variables.css"
-		media="(prefers-color-scheme: light)" />
-	<link rel="stylesheet" id="color" href="%sveltekit.assets%/styles/variables-dark.css"
-		media="screen and (prefers-color-scheme: dark)" />
-	<link rel="stylesheet" href="%sveltekit.assets%/styles/global.css" />
-	<title>tpl-svelte</title>
+  <!-- SMUI Styles -->
+  <link
+    href="%sveltekit.assets%/styles/smui.css"
+    media="(prefers-color-scheme: light)"
+    rel="stylesheet"
+    id="smui"
+  />
+  <link
+    href="%sveltekit.assets%/styles/smui-dark.css"
+    media="screen and (prefers-color-scheme: dark)"
+    rel="stylesheet"
+    id="smui"
+  />
+  <link
+    href="%sveltekit.assets%/styles/variables.css"
+    media="(prefers-color-scheme: light)"
+    rel="stylesheet"
+    id="color"
+  />
+  <link
+    href="%sveltekit.assets%/styles/variables-dark.css"
+    media="screen and (prefers-color-scheme: dark)"
+    rel="stylesheet"
+    id="color"
+  />
+  <link
+    href="%sveltekit.assets%/styles/global.css"
+    rel="stylesheet"
+  />
+  <title>わっぽん</title>
 
-	%sveltekit.head%
+  %sveltekit.head%
 </head>
 
-<body>
-	<div class="mdc-typography">%sveltekit.body%</div>
+<body data-sveltekit-preload-data="hover">
+  <div
+    class="mdc-typography"
+    style="display: contents"
+  >%sveltekit.body%</div>
 </body>
-
-<style>
-	@font-face {
-		font-family: 'M PLUS 1p';
-		src: url('%sveltekit.assets%/fonts/mplus-1p-medium.ttf') format('truetype');
-		font-weight: 500;
-		font-style: normal;
-	}
-
-	@font-face {
-		font-family: 'M PLUS 1p';
-		src: url('%sveltekit.assets%/fonts/mplus-1p-bold.ttf') format('truetype');
-		font-weight: 700;
-		font-style: normal;
-	}
-
-	@font-face {
-		font-family: 'M PLUS 1p';
-		src: url('%sveltekit.assets%/fonts/mplus-1p-heavy.ttf') format('truetype');
-		font-weight: 800;
-		font-style: normal;
-	}
-</style>
 
 </html>

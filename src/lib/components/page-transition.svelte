@@ -1,41 +1,27 @@
 <script lang="ts">
-    import { fly } from "svelte/transition";
-    import { onMount } from "svelte";
-    import { Style } from "$lib/model/inline-style";
-	import type { PageData } from "../../routes/$types";
+  import { fly } from "svelte/transition";
+  import type { PageData } from "../../routes/$types";
 
-    export let data: PageData;
-    let animations = false;
-
-    const xAxis = false;
-
-    onMount(
-        () =>
-            (animations = !window.matchMedia("(prefers-reduced-motion: reduce)")
-                .matches),
-    );
+  export let data: PageData;
+  const xAxis = false;
 </script>
 
-<div style={new Style({ overflowY: "hidden" }).toString()}>
-    {#key data}
-        {#if animations}
-            {#if xAxis}
-                <div
-                    in:fly={{ x: -5, duration: 250, delay: 300 }}
-                    out:fly={{ x: 5, duration: 250 }}
-                >
-                    <slot />
-                </div>
-            {:else}
-                <div
-                    in:fly={{ y: -5, duration: 250, delay: 300 }}
-                    out:fly={{ y: 5, duration: 250 }}
-                >
-                    <slot />
-                </div>
-            {/if}
-        {:else}
-            <slot />
-        {/if}
-    {/key}
+<div style="overflowY: hidden">
+  {#key data}
+    {#if xAxis}
+      <div
+        in:fly={{ x: -5, duration: 250, delay: 300 }}
+        out:fly={{ x: 5, duration: 250 }}
+      >
+        <slot />
+      </div>
+    {:else}
+      <div
+        in:fly={{ y: -5, duration: 250, delay: 250 }}
+        out:fly={{ y: 5, duration: 250 }}
+      >
+        <slot />
+      </div>
+    {/if}
+  {/key}
 </div>

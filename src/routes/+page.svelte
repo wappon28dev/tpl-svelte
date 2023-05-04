@@ -1,23 +1,34 @@
 <script lang="ts">
-	import Card from './card.svelte';
+  import Meta from "$lib/components/meta.svelte";
+  import { pageManifests } from "$lib/model/manifests";
+  import { isLoading } from "$lib/model/store";
+  import { onMount } from "svelte";
+  import Coffee from "./coffee.svelte";
+
+  onMount(() => ($isLoading = false));
 </script>
 
-<div class="wide_title">
-	<p>A svelte project template with<br />sveltekit & Svelte Material UI</p>
+<Meta pageManifest={pageManifests.HOME} />
+<div class="container">
+  <div class="wide-title">
+    <p>A svelte project template with<br />sveltekit & Svelte Material UI</p>
+  </div>
+
+  <article>
+    <Coffee />
+  </article>
 </div>
 
-<main>
-	<Card />
-</main>
-
 <style lang="scss">
-	main {
-		padding: 0 100px;
-		max-width: 1400px;
-		margin: 0 auto;
-
-		@media screen and (max-width: 860px) {
-			padding: 0 20px;
-		}
-	}
+  .container {
+    .wide-title {
+      padding: 30px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 40px;
+      line-height: 1.5em;
+      color: var(--m3-on-primary-container);
+      background-color: var(--m3-inverse-primary);
+    }
+  }
 </style>

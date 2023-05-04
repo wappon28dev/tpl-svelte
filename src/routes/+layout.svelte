@@ -1,100 +1,109 @@
 <script lang="ts">
-	import type TopAppBarComponentDev from '@smui/top-app-bar';
-	import TopAppBar, { Row, Section, Title, AutoAdjust } from '@smui/top-app-bar';
-	import IconButton, { Icon } from '@smui/icon-button';
-	import { AppContent } from '@smui/drawer';
-	import { currentPath, isLandscape, isLoading } from '$lib/model/store';
-	import { onMount } from 'svelte';
-	import PageTransition from '$lib/components/page-transition.svelte';
-	import LinearProgress from '@smui/linear-progress';
-	import Splash from '$lib/components/splash.svelte';
-	import { isLandscapeDetect, PathId, runTransition } from '$lib/model/constants';
-	import type { PageData } from './$types';
-	import Button, { Label } from '@smui/button';
-	import BackToTop from '$lib/components/back-to-top.svelte';
-	import { goto } from '$app/navigation';
+  import { goto } from "$app/navigation";
+  import BackToTop from "$lib/components/back-to-top.svelte";
+  import PageTransition from "$lib/components/page-transition.svelte";
+  import Splash from "$lib/components/splash.svelte";
+  import { isLandscapeDetect } from "$lib/model/constants";
+  import { isLandscape, isLoading } from "$lib/model/store";
+  import { ThemeProvider } from "$lib/model/theme";
+  import Button, { Label } from "@smui/button";
+  import { AppContent } from "@smui/drawer";
+  import IconButton, { Icon } from "@smui/icon-button";
+  import LinearProgress from "@smui/linear-progress";
+  import type TopAppBarComponentDev from "@smui/top-app-bar";
+  import TopAppBar, {
+    AutoAdjust,
+    Row,
+    Section,
+    Title,
+  } from "@smui/top-app-bar";
+  import { onMount } from "svelte";
+  import BookOutline from "svelte-material-icons/BookOutline.svelte";
+  import Launch from "svelte-material-icons/Launch.svelte";
+  import type { PageData } from "./$types";
 
-	export let data: PageData;
+  export let data: PageData;
 
-	let topAppBar: TopAppBarComponentDev;
-	let hasAppMounted = false;
+  let topAppBar: TopAppBarComponentDev;
+  let hasMounted = false;
 
-	onMount(async () => {
-		currentPath.set(new URL(location.href).pathname);
-		hasAppMounted = true;
-		updateSize();
+  onMount(() => {
+    updateSize();
+    hasMounted = true;
 
-		// callback windows width event
-		window.addEventListener('resize', updateSize);
-	});
+    // callback windows width event
+    window.addEventListener("resize", updateSize);
 
-	function updateSize(): void {
-		$isLandscape = isLandscapeDetect();
-		let path = new URL(location.href).pathname;
-		if (path === '/') return;
-	}
+    // callback prefers-color-scheme event
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+    prefersDark.addEventListener("change", () => new ThemeProvider().update());
+  });
+
+  function updateSize(): void {
+    $isLandscape = isLandscapeDetect();
+  }
 </script>
 
-<div style={`cursor: ${$isLoading ? 'progress' : 'normal'};`}>
-	{#if hasAppMounted}
-		<TopAppBar bind:this={topAppBar} variant="fixed">
-			<Row>
-				<Section>
-					<IconButton class="material-icons-outlined" on:click={() => runTransition(PathId.HOME)}>
-						collections_bookmark
-					</IconButton>
-					<Title style="cursor: pointer;" on:click={() => runTransition(PathId.HOME)}
-						><strong>tpl-svelte</strong></Title
-					>
-				</Section>
-				<Section align="end" toolbar>
-					<Button on:click={() => goto('https://github.com/wappon-28-dev/tpl-svelte')}>
-						<Icon class="material-icons">launch</Icon>
-						<Label>source</Label>
-					</Button>
-				</Section>
-			</Row>
+<div class:isLoading={$isLoading}>
+  <TopAppBar bind:this={topAppBar} variant="fixed">
+    <Row>
+      <Section>
+        <IconButton>
+          <BookOutline />
+        </IconButton>
 
-			<div class="progress-mobile">
-				{#if $isLoading}
-					<LinearProgress class="progress-bar-mobile" indeterminate />
-				{/if}
-			</div>
-		</TopAppBar>
+        <Title style="cursor: pointer;"><strong>tpl-svelte</strong></Title>
+      </Section>
+      <Section align="end" toolbar>
+        <Button
+          on:click={() => goto("https://github.com/wappon-28-dev/tpl-svelte")}
+        >
+          <Icon><Launch /></Icon>
+          <Label>source</Label>
+        </Button>
+      </Section>
+    </Row>
 
-		<AutoAdjust {topAppBar}>
-			<AppContent class="app-content">
-				<PageTransition {data}>
-					<slot />
-				</PageTransition>
-			</AppContent>
-		</AutoAdjust>
-	{:else}
-		<Splash />
-	{/if}
+    <div class="progress-mobile">
+      {#if $isLoading}
+        <LinearProgress class="progress-bar-mobile" indeterminate />
+      {/if}
+    </div>
+  </TopAppBar>
+  <AutoAdjust {topAppBar}>
+    <AppContent class="app-content">
+      <PageTransition {data}>
+        <slot />
+      </PageTransition>
+    </AppContent>
+  </AutoAdjust>
 
-	<BackToTop />
+  <BackToTop />
 </div>
+<Splash isMounting={!hasMounted} isLoading={$isLoading} />
 
 <style lang="scss">
-	:global(.app-content) {
-		overflow-y: visible;
-		height: 100%;
-		width: 100%;
-	}
+  :global(.app-content) {
+    overflow-y: visible;
+    overflow-x: hidden;
 
-	:global(
-			.mdc-circular-progress__determinate-circle,
-			.mdc-circular-progress__indeterminate-circle-graphic
-		) {
-		stroke: var(--m3-on-primary);
-	}
-	:global(.app-content) {
-		overflow-y: visible;
-		overflow-x: hidden;
-	}
-	.progress-mobile {
-		margin-top: -5.5px;
-		min-height: 4px;
-	}
+    height: 100%;
+    width: 100%;
+
+    &.isLoading {
+      pointer-events: none;
+    }
+  }
+
+  :global(
+      .mdc-circular-progress__determinate-circle,
+      .mdc-circular-progress__indeterminate-circle-graphic
+    ) {
+    stroke: var(--m3-on-primary);
+  }
+
+  .progress-mobile {
+    margin-top: -5.5px;
+    min-height: 4px;
+  }
 </style>
