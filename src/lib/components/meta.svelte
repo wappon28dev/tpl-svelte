@@ -6,11 +6,9 @@
   export let pageManifest: PageManifest;
 
   const meta = pageManifest.meta;
-  const title =
-    meta.title !== undefined ? `${meta.title} | わっぽん` : "わっぽん";
+  const title = meta.title ?? "tpl-svelte";
   const description =
-    meta.description ??
-    "ディスクリプションが入ります。ディスクリプションが入ります。ディスクリプションが入ります。";
+    meta.description ?? "A svelte project template with Material style";
   const imgUrl = meta.ogp.img ?? "https://iili.io/HXx1Vsf.png";
 
   const url = $page.url.toString();
