@@ -1,26 +1,32 @@
+import { get } from "svelte/store";
 import { goto } from "$app/navigation";
 import { base } from "$app/paths";
 import { page } from "$app/stores";
-import { get } from "svelte/store";
 import type { PageManifest } from "./manifests";
 import { isLoading } from "./store";
 
-type valueOf<T> = T[keyof T];
-type PickType<T, K extends keyof T> = T[K];
+export type valueOf<T> = T[keyof T];
+export type PickType<T, K extends keyof T> = T[K];
 
-const waitMs = async (ms: number): Promise<void> => {
-  await new Promise((resolve) => setTimeout(resolve, ms));
+export const waitMs = async (ms: number): Promise<void> => {
+  await new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 };
 
-const runTransition = (to: PageManifest): void => {
+export const runTransition = (to: PageManifest): void => {
   isLoading.set(true);
+  const { path } = to;
 
-  const path = to.path;
-  if (get(page).url.pathname === path) return;
+  if (get(page).url.pathname === path) {
+    isLoading.set(false);
+    return;
+  }
+
   void goto(base + path);
 };
 
-const runTransitionRaw = async (to: string): void => {
+export const runTransitionRaw = async (to: string): Promise<void> => {
   isLoading.set(true);
 
   if (get(page).url.pathname === to) {
@@ -32,12 +38,13 @@ const runTransitionRaw = async (to: string): void => {
   void goto(base + to);
 };
 
-function isLandscapeDetect(): boolean {
+export const url = {
+  repository: "https://github.com/wappon28dev/assets_center",
+};
+
+export function isLandscapeDetect(): boolean {
   return (
     navigator.userAgent.match(/iPhone|Android.+Mobile/) == null &&
     window.innerWidth > 730
   );
 }
-
-export type { valueOf, PickType };
-export { runTransition, runTransitionRaw, waitMs, isLandscapeDetect };

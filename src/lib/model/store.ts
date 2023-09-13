@@ -1,7 +1,7 @@
+import type Kitchen from "@smui/snackbar/kitchen";
 import { writable } from "svelte/store";
 
-const isLoading = writable(true);
-const isBusy = writable(false);
-const isLandscape = writable(false);
+export const isLoading = writable(true);
+export const isLandscape = writable(false);
 
-export { isLoading, isBusy, isLandscape };
+export const kitchen = writable<Kitchen>();

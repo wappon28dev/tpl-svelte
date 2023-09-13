@@ -1,15 +1,9 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
-  import BackToTop from "$lib/components/back-to-top.svelte";
-  import PageTransition from "$lib/components/page-transition.svelte";
-  import Splash from "$lib/components/splash.svelte";
-  import { isLandscapeDetect } from "$lib/model/constants";
-  import { isLandscape, isLoading } from "$lib/model/store";
-  import { ThemeProvider } from "$lib/model/theme";
   import Button, { Label } from "@smui/button";
   import { AppContent } from "@smui/drawer";
   import IconButton, { Icon } from "@smui/icon-button";
   import LinearProgress from "@smui/linear-progress";
+  import Kitchen from "@smui/snackbar/kitchen";
   import type TopAppBarComponentDev from "@smui/top-app-bar";
   import TopAppBar, {
     AutoAdjust,
@@ -18,8 +12,20 @@
     Title,
   } from "@smui/top-app-bar";
   import { onMount } from "svelte";
-  import BookOutline from "svelte-material-icons/BookOutline.svelte";
+  import CloudSyncOutline from "svelte-material-icons/CloudSyncOutline.svelte";
   import Launch from "svelte-material-icons/Launch.svelte";
+  import { ThemeProvider } from "$lib/model/theme";
+  import { isLandscape, isLoading, kitchen } from "$lib/model/store";
+  import { pageManifests } from "$lib/model/manifests";
+  import {
+    isLandscapeDetect,
+    runTransition,
+    runTransitionRaw,
+    url,
+  } from "$lib/model/constants";
+  import Splash from "$lib/components/Splash.svelte";
+  import PageTransition from "$lib/components/PageTransition.svelte";
+  import BackToTop from "$lib/components/Back2Top.svelte";
   import type { PageData } from "./$types";
 
   export let data: PageData;
@@ -36,7 +42,9 @@
 
     // callback prefers-color-scheme event
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
-    prefersDark.addEventListener("change", () => new ThemeProvider().update());
+    prefersDark.addEventListener("change", () => {
+      new ThemeProvider().update();
+    });
   });
 
   function updateSize(): void {
@@ -45,18 +53,29 @@
 </script>
 
 <div class:isLoading={$isLoading}>
-  <TopAppBar bind:this={topAppBar} variant="fixed">
+  <TopAppBar bind:this={topAppBar} variant="standard">
     <Row>
       <Section>
-        <IconButton>
-          <BookOutline />
+        <IconButton
+          on:click={() => {
+            runTransition(pageManifests.HOME);
+          }}
+          aria-label="ホーム"
+        >
+          <CloudSyncOutline />
         </IconButton>
-
-        <Title style="cursor: pointer;"><strong>tpl-svelte</strong></Title>
+        <Title
+          on:click={() => {
+            runTransition(pageManifests.HOME);
+          }}>Assets Center</Title
+        >
       </Section>
       <Section align="end" toolbar>
         <Button
-          on:click={() => goto("https://github.com/wappon-28-dev/tpl-svelte")}
+          on:click={() => {
+            void runTransitionRaw(url.repository);
+          }}
+          aria-label="ソースを見に行く"
         >
           <Icon><Launch /></Icon>
           <Label>source</Label>
@@ -70,6 +89,7 @@
       {/if}
     </div>
   </TopAppBar>
+
   <AutoAdjust {topAppBar}>
     <AppContent class="app-content">
       <PageTransition {data}>
@@ -81,6 +101,7 @@
   <BackToTop />
 </div>
 <Splash isMounting={!hasMounted} isLoading={$isLoading} />
+<Kitchen bind:this={$kitchen} />
 
 <style lang="scss">
   :global(.app-content) {
@@ -93,13 +114,6 @@
     &.isLoading {
       pointer-events: none;
     }
-  }
-
-  :global(
-      .mdc-circular-progress__determinate-circle,
-      .mdc-circular-progress__indeterminate-circle-graphic
-    ) {
-    stroke: var(--m3-on-primary);
   }
 
   .progress-mobile {

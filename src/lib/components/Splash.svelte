@@ -23,7 +23,10 @@
     z-index: -1;
     opacity: 0;
 
-    transition: all 300ms, top 0ms, height 0ms;
+    transition:
+      all 300ms,
+      top 0ms,
+      height 0ms;
 
     &.isLoading {
       top: var(--app-bar-height);
